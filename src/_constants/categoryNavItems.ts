@@ -29,5 +29,4 @@ export const categoryNavItems = [
     url: "/products/books",
     icon: "FaBook",
   },
-  // ... other items
 ];
