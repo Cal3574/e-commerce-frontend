@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import SessionProvider from "./_components/SessionProvider";
+import SessionProvider from "../_components/SessionProvider";
 import { getServerSession } from "next-auth";
-import Navbar from "./_components/navigation/mainNav/Navbar";
-import CategoryNav from "./_components/navigation/categoryNav/CategoryNav";
+import Navbar from "../_components/navigation/mainNav/Navbar";
+import CategoryNav from "../_components/navigation/categoryNav/CategoryNav";
+import MobileNavBar from "../_components/navigation/mobileNav/MobileNav";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,7 +23,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         <SessionProvider session={session}>
-          <Navbar />
+          <div className="hidden md:block">
+            <Navbar />
+          </div>
+          <div className="block md:hidden">
+            <MobileNavBar />
+          </div>
           <CategoryNav />
           {children}
         </SessionProvider>

@@ -4,8 +4,8 @@ export const navItems = [
     url: "/",
   },
   {
-    name: "Products",
-    url: "/products",
+    name: "Browse",
+    url: "/browse",
   },
   {
     name: "Cart",
