@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
-import "./globals.css";
-import SessionProvider from "../_components/SessionProvider";
 import { getServerSession } from "next-auth";
-import Navbar from "../_components/navigation/mainNav/Navbar";
+import { Montserrat } from "next/font/google";
+import SessionProvider from "../_components/SessionProvider";
 import CategoryNav from "../_components/navigation/categoryNav/CategoryNav";
+import Navbar from "../_components/navigation/mainNav/Navbar";
 import MobileNavBar from "../_components/navigation/mobileNav/MobileNav";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import "./globals.css";
+import React from "react";
+import { ReactQueryProvider } from "@/_components/ReactQueryProvider";
+import { CartProvider } from "@/_providers/CartProvider";
+
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,20 +23,24 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions as any);
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <SessionProvider session={session}>
-          <div className="hidden md:block">
-            <Navbar />
-          </div>
-          <div className="block md:hidden">
-            <MobileNavBar />
-          </div>
-          <CategoryNav />
-          {children}
-        </SessionProvider>
+        <ReactQueryProvider>
+          <SessionProvider session={session as any}>
+            <CartProvider>
+              <div className="hidden md:block">
+                <Navbar />
+              </div>
+              <div className="block md:hidden">
+                <MobileNavBar />
+              </div>
+              <CategoryNav />
+              {children}
+            </CartProvider>
+          </SessionProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

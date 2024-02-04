@@ -9,6 +9,7 @@ declare module "next-auth" {
       name: string;
       email: string;
       image: string;
+      userId: number;
     };
     expires: string;
     jwt: string | unknown;

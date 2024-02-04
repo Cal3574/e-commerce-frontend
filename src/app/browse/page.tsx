@@ -8,7 +8,7 @@ export default async function Browse() {
 
   return (
     <section className="p-24 flex flex-wrap gap-12 justify-center items-center">
-      {allProducts.data.map((product: Product) => (
+      {allProducts?.data?.map((product: Product) => (
         <MainProductCard key={product.id} product={product} />
       ))}
     </section>

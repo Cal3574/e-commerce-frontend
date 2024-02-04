@@ -1,31 +1,19 @@
 "use client";
-import { FC, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { SlBasket } from "react-icons/sl";
+import { useCart } from "@/_providers/CartProvider";
+import { CartItem, CartProduct } from "@/_types/cart";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Image from "next/image";
+import { FC } from "react";
+import { AiTwotoneDelete } from "react-icons/ai";
+import { SlBasket } from "react-icons/sl";
 
-interface ShoppingCartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
+interface ShoppingCartProps {}
 
-interface ShoppingCartProps {
-  items: ShoppingCartItem[];
-}
+const ShoppingCart: FC<ShoppingCartProps> = () => {
+  const { cartLoading, items, removeItem } = useCart()!;
 
-const ShoppingCart: FC<ShoppingCartProps> = ({ items }) => {
-  // Function to handle quantity changes
-  // const updateQuantity = (id, quantity) => {
-  //   // Update the quantity of the item with the given id
-  // };
+  //debounce
 
   return (
     <Sheet>
@@ -42,22 +30,42 @@ const ShoppingCart: FC<ShoppingCartProps> = ({ items }) => {
                 <SlBasket size={24} />
               </button>
             </div>
+
+            {cartLoading && (
+              <div className="text-xl flex items-center justify-center p-4">
+                Loading...
+              </div>
+            )}
+
+            {items?.isSuccess && !items.data && (
+              <div className="text-xl flex items-center justify-center p-4">
+                Your basket is empty
+              </div>
+            )}
+
             <div className="p-4">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-between items-center p-2 hover:bg-gray-50"
-                >
-                  <span className="font-semibold">{item.name}</span>
-                  <span>{`$${item.price.toFixed(2)}`}</span>
-                  <input
-                    type="number"
-                    className="form-input mt-1 block w-16 text-center border-gray-300 shadow-sm rounded-md"
-                    value={item.quantity}
-                    onChange={() => {}}
-                  />
-                </div>
-              ))}
+              {items?.isSuccess &&
+                items?.data?.cartItems.map((item: CartItem & CartProduct) => (
+                  <div
+                    key={item.cartItemId}
+                    className="flex justify-between items-center p-2 hover:bg-gray-50 h-24"
+                  >
+                    <Image
+                      src={item.product.image}
+                      width={50}
+                      height={50}
+                      alt="Basket item"
+                    />
+                    <span className="font-semibold">{item.product.name}</span>
+                    <button
+                      onClick={async () => {
+                        removeItem(Number(item.cartItemId));
+                      }}
+                    >
+                      <AiTwotoneDelete size={24} />
+                    </button>
+                  </div>
+                ))}
             </div>
             <div className="flex justify-end items-center p-4">
               <Button className="bg-transparent border border-black shadow-md w-1/2 py-6 hover:bg-gray-500 text-black hover:text-white">

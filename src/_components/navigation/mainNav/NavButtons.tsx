@@ -60,7 +60,7 @@ const NavButtons: FC<NavButtonsProps> = ({}) => {
   ];
   return (
     <section className="flex gap-8 items-center">
-      <ShoppingCart items={items} />
+      <ShoppingCart />
       <button className="">
         <CiHeart size={30} />
       </button>

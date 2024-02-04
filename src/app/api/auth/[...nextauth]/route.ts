@@ -6,7 +6,7 @@ import { User } from "@/_types/user";
 import { Session } from "next-auth";
 
 const jwt = require("jsonwebtoken");
-export const authOptions = {
+export const authOptions: any = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GitHubProvider({
@@ -24,7 +24,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {
-        // Create a JWT with the user's information
+        token.userId = user.userId;
         token.jwt = jwt.sign(
           { userId: user.userId, email: user.email },
           process.env.JWT_SECRET,
@@ -36,6 +36,7 @@ export const authOptions = {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.jwt = token.jwt; // Include the JWT token in the session
+        session.user.userId = token.userId as any;
       }
       return session;
     },
@@ -55,6 +56,7 @@ export const authOptions = {
       }
 
       const userId = doesUserExist?.data.id;
+
       //store the userId in session
       user.user.userId = userId;
 

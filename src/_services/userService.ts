@@ -1,6 +1,4 @@
-import { getSession } from "next-auth/react";
 import { UserData } from "../_types/user";
-import { getToken } from "next-auth/jwt";
 
 const secret = process.env.NEXTAUTH_SECRET;
 const addUser = async (userData: UserData) => {
